@@ -132,7 +132,7 @@ select dbid
       ,to_char(round(dbtime           /1e6),'999g999g999g999') as dbtime
       ,n, wait_class, event_name
       ,to_char(round(time_waited_micro/1e6),'999g999g999g999') as time_waited
-      ,to_char(round(time_waited_micro*100/dbtime,1),'99.0')||'%'    as dbtime_pct
+      ,CASE WHEN dbtime > 0 THEN to_char(round(time_waited_micro*100/dbtime,1),'99.0')||'%' ELSE 'DIV 0 ERR' /* to_char(dbtime) */ end    as dbtime_pct
       ,to_char(round(time_waited_micro*100/1e6/cpu_count/elapsed_secs,1),'99.0')||'%'    as elapsed_pct
 from top_events
      join dbtime using(dbid,snap_id,inst_id)
